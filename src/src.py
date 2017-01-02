@@ -7,70 +7,106 @@
 
 # Question -1-
 
-def make_date(y=2000, m=1, d=1):
-
-    dt = {'year':y, 'month':m, 'day':d}
-    
+def make_date(year = 2000, month = 1, day = 1):   
+    """
+    This function returns a functional implementation of a mutable date form.
+    @type year: Integers.
+    @type month: Integers.
+    @type day: Integers.
+    """
     def dispatch(msg):
-        if msg == 'year':
-            return dt['year']
-        elif msg == 'month':
-            return dt['month']
-        elif msg == 'day':
-            return dt['day']
-        elif msg == 'str_date':
-            return str_date(dt)
+        """
         
+        @param msg:
+        @type msg:
+        """
+        if msg == 'year':
+            return year
+        elif msg == 'month':
+            return month
+        elif msg == 'day':
+            return day
     return dispatch
 
-def year(date_func):
-    return date_func('year')
+def get_date(dt, val):
+    """
+    
+    @param dt:
+    @type dt:
+    @param val:
+    @type val:
+    """
+    return dt(val)
+#------------------------------------------------------------------------------ 
+def day(dt):
+    """
+    
+    @param dt:
+    @type dt:
+    """
+    return get_date(dt, 'day')
 
-def month(date_func):
-    if date_func('month') == 1:
+def month(dt):
+    """
+    
+    @param dt:
+    @type dt:
+    """
+    if get_date(dt, 'month') == 1:
         return 'January'
-    elif date_func('month') == 2:
+    elif get_date(dt, 'month') == 2:
         return 'February'
-    elif date_func('month') == 3:
+    elif get_date(dt, 'month') == 3:
         return 'March'
-    elif date_func('month') == 4:
+    elif get_date(dt, 'month') == 4:
         return 'April'
-    elif date_func('month') == 5:
+    elif get_date(dt, 'month') == 5:
         return 'May'
-    elif date_func('month') == 6:
+    elif get_date(dt, 'month') == 6:
         return 'June'
-    elif date_func('month') == 7:
+    elif get_date(dt, 'month') == 7:
         return 'July'
-    elif date_func('month') == 8:
+    elif get_date(dt, 'month') == 8:
         return 'August'
-    elif date_func('month') == 9:
+    elif get_date(dt, 'month') == 9:
         return 'September'
-    elif date_func('month') == 10:
+    elif get_date(dt, 'month') == 10:
         return 'October'
-    elif date_func('month') == 11:
+    elif get_date(dt, 'month') == 11:
         return 'November'
-    elif date_func('month') == 12:
+    elif get_date(dt, 'month') == 12:
         return 'December' 
 
-def day(date_func):
-    return date_func('day')
-
-def str_date(date_func):
-    if day(date_func) == 1:
-        print('{0}st of {1}, {2}'.format(day(date_func), month(date_func), year(date_func)))
-    elif day(date_func) == 2:
-        print('{0}nd of {1}, {2}'.format(day(date_func), month(date_func), year(date_func)))
+def year(dt):
+    """
+    
+    @param dt:
+    @type dt:
+    """
+    return get_date(dt, 'year')
+#------------------------------------------------------------------------------ 
+def str_date(dt):
+    """
+    
+    @param dt:
+    @type dt:
+    """
+    if day(dt) == 1:
+        print('{0}st of {1}, {2}'.format(day(dt), month(dt), year(dt)))
+    elif day(dt) == 2:
+        print('{0}nd of {1}, {2}'.format(day(dt), month(dt), year(dt)))
     else:
-        print('{0}th of {1}, {2}'.format(day(date_func), month(date_func), year(date_func)))
+        print('{0}th of {1}, {2}'.format(day(dt), month(dt), year(dt)))
+    
 
 d = make_date(2016, 12, 26)
-print(d)
+d
 # <function make_date.<locals>.dispatch at 0x02A880C0>
-print(year(d))
+year(d)
 # 2016
-print(month(d))
+month(d)
 # December
-print(day(d))
+day(d)
 # 26
 str_date(d)
 # 26th of December, 2016
