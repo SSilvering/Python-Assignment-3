@@ -6,7 +6,6 @@
 #===============================================================================#
 
 # Question -1-
-
 def make_date(year = 2000, month = 1, day = 1):   
     """
     This function returns a functional implementation of a mutable date form.
@@ -14,12 +13,12 @@ def make_date(year = 2000, month = 1, day = 1):
     @type month: Integers.
     @type day: Integers.
     """
-    def dispatch(msg):
-        """
+    if not check_date(year, month, day):  # Checks if the date is correct.
+        print("An incorrect date. sets a default date.")
+        year, month, day = 2000, 1, 1
         
-        @param msg:
-        @type msg:
-        """
+    def dispatch(msg):
+        """ This function returns the requested function based on the received text. """
         if msg == 'year':
             return year
         elif msg == 'month':
@@ -29,29 +28,39 @@ def make_date(year = 2000, month = 1, day = 1):
     return dispatch
 
 def get_date(dt, val):
-    """
-    
-    @param dt:
-    @type dt:
-    @param val:
-    @type val:
-    """
+    """ getter date. """
     return dt(val)
+
+def check_date(year, month, day):
+    """ This boolean function checks if the date is correct. """
+    if year < 2000:
+        return False
+    if month > 12:
+        return False
+    if day > 31:
+        return False
+    if month == 2:
+        if year % 4 == 0 and year % 100 != 0 or year % 400 == 0: # Checks if it leap year.
+            if not day <= 29:
+                return False
+        elif not day <= 28:
+            return False
+    if month == 1 or month == 3 or month == 5 or month == 7 or month == 8 or month == 10 or month == 12:
+        if not day <= 31:
+            return False
+    if month == 4 or month == 6 or month == 9 or month == 11:
+        if not day <= 30:
+            return False
+            
+    return True
 #------------------------------------------------------------------------------ 
+
 def day(dt):
-    """
-    
-    @param dt:
-    @type dt:
-    """
+    """ getter for the day of specific date. """
     return get_date(dt, 'day')
 
 def month(dt):
-    """
-    
-    @param dt:
-    @type dt:
-    """
+    """ Returns the name of the month of specific date. """
     if get_date(dt, 'month') == 1:
         return 'January'
     elif get_date(dt, 'month') == 2:
@@ -78,35 +87,21 @@ def month(dt):
         return 'December' 
 
 def year(dt):
-    """
-    
-    @param dt:
-    @type dt:
-    """
+    """ getter for the year of specific date. """
     return get_date(dt, 'year')
 #------------------------------------------------------------------------------ 
+
 def str_date(dt):
-    """
-    
-    @param dt:
-    @type dt:
-    """
+    """ This function prints the date. """
     if day(dt) == 1:
         print('{0}st of {1}, {2}'.format(day(dt), month(dt), year(dt)))
     elif day(dt) == 2:
         print('{0}nd of {1}, {2}'.format(day(dt), month(dt), year(dt)))
+    elif day(dt) == 3:
+        print('{0}rd of {1}, {2}'.format(day(dt), month(dt), year(dt)))
     else:
         print('{0}th of {1}, {2}'.format(day(dt), month(dt), year(dt)))
-    
+#------------------------------------------------------------------------------
 
-d = make_date(2016, 12, 26)
-d
-# <function make_date.<locals>.dispatch at 0x02A880C0>
-year(d)
-# 2016
-month(d)
-# December
-day(d)
-# 26
-str_date(d)
-# 26th of December, 2016
+# Question -2-                                      
+
