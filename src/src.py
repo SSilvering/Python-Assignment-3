@@ -4,6 +4,8 @@
 # Student 1:             Shai Hod     - 304800402                               #
 # Student 2:             Dudu Abutbul - 200913671                               #
 #===============================================================================#
+from test._test_multiprocessing import get_value
+from test.test_tools.test_unparse import nonlocal_ex
 
 # Question -1-
 def make_date(year = 2000, month = 1, day = 1):   
@@ -14,7 +16,7 @@ def make_date(year = 2000, month = 1, day = 1):
     @type day: Integers.
     """
     if not check_date(year, month, day):  # Checks if the date is correct.
-        print("An incorrect date. sets a default date.")
+        print("    An incorrect date. \nDefault date has been set.")
         year, month, day = 2000, 1, 1
         
     def dispatch(msg):
@@ -109,7 +111,47 @@ def str_date(dt):
 #------------------------------------------------------------------------------ 
 # Question -3-
 
-# TODO: need to be done.
+def make_currency(amount = 0.0, symbol = ''):
+    """
+    This function stores a currency and its value.
+    @param amount: Currency value.
+    @type amount: Float.
+    @param symbol: Currency sign.
+    @type symbol: Unicode character.
+    """
+    def dispatch(message):
+        """ This function returns the requested function based on the received text. """        
+        if message == 'get_value':
+            return get_value
+        elif message == 'set_value':
+            return set_value
+        elif message == 'str':  # Prints a textual representation of this currency.
+            print('{0}{1}'.format(symbol, amount))
+        elif message == 'convert':
+            return convert
+
+    def get_value(msg):
+        """ This function returns a specific element of the currency. """
+        if msg == 'amount':
+            return amount
+        elif msg == 'symbol':
+            return symbol
+    
+    def set_value(msg, value):
+        """ This function sets a new value of a particular element of the currency. """
+        nonlocal amount, symbol
+        if msg == 'amount':
+            amount = value
+        elif msg == 'symbol':
+            symbol = value
+
+    def convert(func, new_sign):
+        """ This function converts this specific currency to another currency. """
+        nonlocal amount, symbol
+        amount = func(amount)
+        symbol = new_sign
+    
+    return dispatch
 
 #------------------------------------------------------------------------------ 
 # Question -4-
