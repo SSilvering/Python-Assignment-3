@@ -193,4 +193,90 @@ def get_reverse_map_iterator(seq, func = None):
 #------------------------------------------------------------------------------ 
 # Question -5-
 
-# TODO: need to be done.
+def make_mutable_rlist(copy = None):
+    """Return a functional implementation of a mutable recursive list."""
+    contents = empty_rlist
+    def length():
+        return len_rlist(contents)
+    def get_item(ind):
+        return getitem_rlist(contents, ind)
+    def push_first(value):
+        nonlocal contents
+        contents = make_rlist(value, contents)
+    def pop_first():
+        nonlocal contents
+        f = first(contents)
+        contents = rest(contents)
+        return f
+    def str():
+        print('[', end='')           # Prints first bracket. 
+        return  print_rlist(contents)
+    def slice(start, end):
+        pass
+    def extend(list):
+        pass
+    
+    def iterator():
+        """ This function returns an iterator for this recursive list. """
+        index = 0    
+        def next():
+            """ This function returns the next element in that sequence. """
+            if hasNext():
+                nonlocal index # Gets access for update the original variable.
+                index += 1
+                return get_item(index - 1)
+            else:
+                return 'No more items.'
+        
+        def hasNext():
+            """ This function checks whether there are more elements in sequence. """
+            return index < length()
+    
+        return {'hasNext': hasNext, 'next': next}
+    
+    return {'length':length, 'get_item':get_item, 'push_first':push_first,
+        'pop_first': pop_first,'slice':slice,'extend':extend,'get_iterator':iterator, 'str':str}
+
+empty_rlist = None
+
+def make_rlist(first, rest):
+    """Make a recursive list from its first     element and the rest."""
+    return (first, rest)
+
+def first(s):
+    """Return the first element of a recursive     list s."""
+    return s[0]
+
+def rest(s):
+    """Return the rest of the elements of a     recursive list s."""
+    return s[1]
+
+def len_rlist(s):
+    """Return the length of recursive list s."""
+    length = 0
+    while s != empty_rlist:
+        s, length = rest(s), length + 1
+    return length
+
+def getitem_rlist(s, i):
+    """Return the element at index i of recursive list s."""
+    while i > 0:
+        s, i = rest(s), i - 1
+    return first(s)
+
+def print_rlist(s):
+    """ This function prints the rest of the recursive list. """
+    if rest(s) != empty_rlist:
+        return '{0},{1}'.format(first(s), print_rlist(rest(s)))
+    
+    return '{0}]'.format(first(s))
+
+
+
+my_list = make_mutable_rlist()
+for x in range(4):
+    my_list['push_first'](x)
+print(my_list['str']())
+it = my_list['get_iterator']()
+while it['hasNext']():
+    print(it['next']())
