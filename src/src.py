@@ -4,10 +4,6 @@
 # Student 1:             Shai Hod     - 304800402                               #
 # Student 2:             Dudu Abutbul - 200913671                               #
 #===============================================================================#
-from test._test_multiprocessing import get_value
-from test.test_tools.test_unparse import nonlocal_ex
-from setuptools.dist import sequence
-from _elementtree import Element
 
 # Question -1-
 def make_date(year = 2000, month = 1, day = 1):   
@@ -105,6 +101,7 @@ def str_date(dt):
         print('{0}rd of {1}, {2}'.format(day(dt), month(dt), year(dt)))
     else:
         print('{0}th of {1}, {2}'.format(day(dt), month(dt), year(dt)))
+
 #------------------------------------------------------------------------------
 # Question -2-                                      
 
@@ -157,14 +154,19 @@ def make_currency(amount = 0.0, symbol = ''):
 
 #------------------------------------------------------------------------------ 
 # Question -4-
-# TODO: write comments!!
+
 def get_reverse_map_iterator(seq, func = None):
+    """
+    This function gets a sequence and returns a new sequence in reverse order.
+    This function can also gets a function that will operate on each element 
+    in the new sequence.
+    """
     
     reverse_map_iterator = []
     
     index = len(seq)
     
-    if func:
+    if func :
         for _ in seq:
             index -= 1
             reverse_map_iterator.append(func(seq[index]))
@@ -174,14 +176,16 @@ def get_reverse_map_iterator(seq, func = None):
             reverse_map_iterator.append(seq[index])
     
     def next():
+        """ This function returns the next element in that sequence. """
         if has_more():
-            nonlocal index
+            nonlocal index # Gets access for update the original variable.
             index += 1
             return reverse_map_iterator[index - 1]
         else:
             return 'No more items.'
         
     def has_more():
+        """ This function checks whether there are more elements in sequence. """
         return index < len(seq)
     
     return {'next':next,'has_more':has_more}
