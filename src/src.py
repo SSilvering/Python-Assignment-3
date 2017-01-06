@@ -6,6 +6,8 @@
 #===============================================================================#
 from test._test_multiprocessing import get_value
 from test.test_tools.test_unparse import nonlocal_ex
+from setuptools.dist import sequence
+from _elementtree import Element
 
 # Question -1-
 def make_date(year = 2000, month = 1, day = 1):   
@@ -155,8 +157,34 @@ def make_currency(amount = 0.0, symbol = ''):
 
 #------------------------------------------------------------------------------ 
 # Question -4-
-
-# TODO: need to be done.
+# TODO: write comments!!
+def get_reverse_map_iterator(seq, func = None):
+    
+    reverse_map_iterator = []
+    
+    index = len(seq)
+    
+    if func:
+        for _ in seq:
+            index -= 1
+            reverse_map_iterator.append(func(seq[index]))
+    else:
+        for _ in seq:
+            index -= 1
+            reverse_map_iterator.append(seq[index])
+    
+    def next():
+        if has_more():
+            nonlocal index
+            index += 1
+            return reverse_map_iterator[index - 1]
+        else:
+            return 'No more items.'
+        pass
+    def has_more():
+        return index < len(seq)
+    
+    return {'next':next,'has_more':has_more}
 
 #------------------------------------------------------------------------------ 
 # Question -5-
