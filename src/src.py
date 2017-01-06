@@ -180,7 +180,7 @@ def get_reverse_map_iterator(seq, func = None):
             return reverse_map_iterator[index - 1]
         else:
             return 'No more items.'
-        pass
+        
     def has_more():
         return index < len(seq)
     
