@@ -192,29 +192,42 @@ def get_reverse_map_iterator(seq, func = None):
 
 #------------------------------------------------------------------------------ 
 # Question -5-
-
-def make_mutable_rlist(copy = None):
+# TODO: need to write comments and second view
+def make_mutable_rlist(copy=None):
     """Return a functional implementation of a mutable recursive list."""
     contents = empty_rlist
     def length():
         return len_rlist(contents)
+    
     def get_item(ind):
         return getitem_rlist(contents, ind)
+    
     def push_first(value):
         nonlocal contents
         contents = make_rlist(value, contents)
+    
     def pop_first():
         nonlocal contents
         f = first(contents)
         contents = rest(contents)
         return f
+    
     def str():
-        print('[', end='')           # Prints first bracket. 
-        return  print_rlist(contents)
-    def slice(start, end):
-        pass
+        print('[{0}'.format(print_rlist(contents)))
+    
     def extend(list):
-        pass
+        nonlocal contents
+        temp_list = make_mutable_rlist(list)
+        end = len_rlist(contents)
+        for _ in range(end):
+            end -= 1
+            temp_list['push_first'](getitem_rlist(contents, end))
+        contents = None
+        end = temp_list['length']()
+        for _ in range(end):
+            end -= 1
+            contents = make_rlist(temp_list['get_item'](end), contents)
+        
     
     def iterator():
         """ This function returns an iterator for this recursive list. """
@@ -222,7 +235,7 @@ def make_mutable_rlist(copy = None):
         def next():
             """ This function returns the next element in that sequence. """
             if hasNext():
-                nonlocal index # Gets access for update the original variable.
+                nonlocal index  # Gets access for update the original variable.
                 index += 1
                 return get_item(index - 1)
             else:
@@ -234,8 +247,23 @@ def make_mutable_rlist(copy = None):
     
         return {'hasNext': hasNext, 'next': next}
     
+    def cut_list(start, end):
+        cut_list = make_mutable_rlist()
+        for _ in range(end):
+            end -= 1
+            cut_list['push_first'](get_item(end))
+        return cut_list
+
+    if copy:  # Copy Constructor
+        new_list = make_mutable_rlist()
+        end = copy['length']()
+        for _ in range(end):
+            end -= 1
+            new_list['push_first'](copy['get_item'](end))
+        return new_list
+        
     return {'length':length, 'get_item':get_item, 'push_first':push_first,
-        'pop_first': pop_first,'slice':slice,'extend':extend,'get_iterator':iterator, 'str':str}
+        'pop_first': pop_first, 'slice':cut_list, 'extend':extend, 'get_iterator':iterator, 'str':str}
 
 empty_rlist = None
 
@@ -273,10 +301,20 @@ def print_rlist(s):
 
 
 
+
 my_list = make_mutable_rlist()
 for x in range(4):
     my_list['push_first'](x)
-print(my_list['str']())
+my_list['str']()
+
+ext = make_mutable_rlist(my_list)
+my_list['extend'](ext)
+my_list['str']()
+ext['str']()
+
 it = my_list['get_iterator']()
 while it['hasNext']():
     print(it['next']())
+my_list['slice'](0,2)['str']()
+your_list = make_mutable_rlist(my_list)
+your_list['str']()
