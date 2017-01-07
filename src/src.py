@@ -25,6 +25,8 @@ def make_date(year = 2000, month = 1, day = 1):
             return month
         elif msg == 'day':
             return day
+        
+    # Dispatch function.
     return dispatch
 
 def get_date(dt, val):
@@ -150,6 +152,7 @@ def make_currency(amount = 0.0, symbol = ''):
         amount = func(amount)
         symbol = new_sign
     
+    # Dispatch function.
     return dispatch
 
 #------------------------------------------------------------------------------ 
@@ -162,7 +165,7 @@ def get_reverse_map_iterator(seq, func = None):
     in the new sequence.
     """
     
-    reverse_map_iterator = []
+    reverse_map_iterator = [] # Store new reverse sequence in function lexical scope.
     
     index = len(seq)
     
@@ -188,11 +191,12 @@ def get_reverse_map_iterator(seq, func = None):
         """ This function checks whether there are more elements in sequence. """
         return index < len(seq)
     
+    # Dispatch function.
     return {'next':next,'has_more':has_more}
 
 #------------------------------------------------------------------------------ 
 # Question -5-
-# TODO: need to write comments and second view
+
 def make_mutable_rlist(copy=None):
     """Return a functional implementation of a mutable recursive list."""
     contents = empty_rlist
@@ -216,22 +220,22 @@ def make_mutable_rlist(copy=None):
         print('[{0}'.format(print_rlist(contents)))
     
     def extend(list):
-        nonlocal contents
-        temp_list = make_mutable_rlist(list)
+        """ This function expands sequence that already exist. """
+        nonlocal contents                       # Gets access for update the original variable.
+        temp_list = make_mutable_rlist(list)    # Copy the sequence that had received to new sequence.
         end = len_rlist(contents)
-        for _ in range(end):
+        for _ in range(end):                    # Copy the rest of the elements from the original sequence.
             end -= 1
             temp_list['push_first'](getitem_rlist(contents, end))
-        contents = None
+        contents = None                         # Initialize variable for receiving a new sequence.
         end = temp_list['length']()
-        for _ in range(end):
+        for _ in range(end):                    # Makes new recursive list from temporary list.
             end -= 1
             contents = make_rlist(temp_list['get_item'](end), contents)
         
-    
     def iterator():
         """ This function returns an iterator for this recursive list. """
-        index = 0    
+        index = 0
         def next():
             """ This function returns the next element in that sequence. """
             if hasNext():
@@ -244,17 +248,22 @@ def make_mutable_rlist(copy=None):
         def hasNext():
             """ This function checks whether there are more elements in sequence. """
             return index < length()
-    
+        
+        # Dispatch Dictionary.
         return {'hasNext': hasNext, 'next': next}
     
     def cut_list(start, end):
+        """ This function simulates the action of cutting of Python. 
+            It cuts the original sequence and returns a new cut sequence."""
         cut_list = make_mutable_rlist()
         for _ in range(end):
             end -= 1
             cut_list['push_first'](get_item(end))
         return cut_list
 
-    if copy:  # Copy Constructor
+    if copy:  # Copy Constructor.
+        """ If function gets a sequence, it is operates like 
+            copy constructor and copying the sequence to new one. """
         new_list = make_mutable_rlist()
         end = copy['length']()
         for _ in range(end):
@@ -262,6 +271,7 @@ def make_mutable_rlist(copy=None):
             new_list['push_first'](copy['get_item'](end))
         return new_list
         
+    # Dispatch Dictionary.
     return {'length':length, 'get_item':get_item, 'push_first':push_first,
         'pop_first': pop_first, 'slice':cut_list, 'extend':extend, 'get_iterator':iterator, 'str':str}
 
@@ -301,7 +311,7 @@ def print_rlist(s):
 
 
 
-
+# TODO: don't forget to remove operating lines!
 my_list = make_mutable_rlist()
 for x in range(4):
     my_list['push_first'](x)
