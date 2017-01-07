@@ -107,8 +107,22 @@ def str_date(dt):
 #------------------------------------------------------------------------------
 # Question -2-                                      
 
-# TODO: need to be done.
+def data_preprocessing_tree(data):
+    
+    #Enumerate paths, filter wrong patches and complete missing file type.
+    data = list(map(lambda x:x if x.find('.', len(x) - 1) == -1 else x + 'txt' ,
+                    filter(lambda x: False if x.find('//') != -1 or x.find('..') != -1 else True , data.split(';'))))
+    
+    data = list(map(lambda x: x.split('/'), data))
+                
+    return data
 
+
+def data_preprocessing_file_types(data):
+    pass
+
+data= '/User/someuser/file.py;/tmp/download/file.zip;/tmp/download/file2.zip;/;/usr/local/bin;/User/someuser/file..py;/tmp/file.;/usr//some'
+print(data_preprocessing_tree(data))
 #------------------------------------------------------------------------------ 
 # Question -3-
 
@@ -312,19 +326,19 @@ def print_rlist(s):
 
 
 # TODO: don't forget to remove operating lines!
-my_list = make_mutable_rlist()
-for x in range(4):
-    my_list['push_first'](x)
-my_list['str']()
-
-ext = make_mutable_rlist(my_list)
-my_list['extend'](ext)
-my_list['str']()
-ext['str']()
-
-it = my_list['get_iterator']()
-while it['hasNext']():
-    print(it['next']())
-my_list['slice'](0,2)['str']()
-your_list = make_mutable_rlist(my_list)
-your_list['str']()
+# my_list = make_mutable_rlist()
+# for x in range(4):
+#     my_list['push_first'](x)
+# my_list['str']()
+# 
+# ext = make_mutable_rlist(my_list)
+# my_list['extend'](ext)
+# my_list['str']()
+# ext['str']()
+# 
+# it = my_list['get_iterator']()
+# while it['hasNext']():
+#     print(it['next']())
+# my_list['slice'](0,2)['str']()
+# your_list = make_mutable_rlist(my_list)
+# your_list['str']()
