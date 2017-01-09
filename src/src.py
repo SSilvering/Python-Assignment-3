@@ -108,21 +108,52 @@ def str_date(dt):
 # Question -2-                                      
 
 def data_preprocessing_tree(data):
+    """
+    This function gets a list of the files paths. It checks if the data is correct
+    and returns a nested tuple of root path of the files associated with the same file path.
+    @param data: List of files paths.
+    @type data: List of strings.
+    """
     
-    #Enumerate paths, filter wrong patches and complete missing file type.
-    data = list(map(lambda x:x if x.find('.', len(x) - 1) == -1 else x + 'txt' ,
-                    filter(lambda x: False if x.find('//') != -1 or x.find('..') != -1 else True , data.split(';'))))
-    
-    data = list(map(lambda x: x.split('/'), data))
-                
-    return data
+    # Enumerate paths, filter wrong paths and complete missing file type.
+    data = set(map(lambda fix_path: fix_path + 'txt' if fix_path[len(fix_path) - 1:] == '.' else fix_path,
+                    filter(lambda path: True if '..' not in path and '//' not in path else False, data.split(';'))))
 
+    # Pre-stage of accumulated stage. creates list of paths without file types.
+    dirs = set(map(lambda path: path[:path.rfind('/')] if '.' in path else path, data))
+    
+    # Building the tree.
+    tree = list(map(lambda dir: 
+               (dir, tuple(map(lambda file: file[file.rfind('/') + 1:],
+                                filter(lambda file: True if (True if (dir + file[file.rfind('/'):] in file) else False) 
+                                                                                                        else False, data))))
+                                                                                                                        , dirs))
+    return tree
 
 def data_preprocessing_file_types(data):
-    pass
+    """
+    This function gets a list of file paths. It checks if the data is correct 
+    and returns a list of tuples with file types and number of occurrences of each of them.
+    @param data: List of files paths.
+    @type data:  List of strings.
+    """
+    
+    # Enumerate paths, filter wrong paths and complete missing file type.
+    data = set(map(lambda fix_path: fix_path + 'txt' if fix_path[len(fix_path) - 1:] == '.' else fix_path,
+                    filter(lambda path: True if '..' not in path and '//' not in path else False, data.split(';'))))
+    
+    
+    # Pre-stage of accumulated stage. creates list of the types of the files without the path.
+    file_types = list(filter(lambda remove:True if not remove.find('.') else None,
+                        map(lambda path: path[path.find('.'):] if '.' in path else path, data)))
+    
+    # Build a list of tuples with file types and number of occurrences of each of them.
+    tree = list(
+                set(map(lambda type:
+                            ((type[+1:]), file_types.count(type))
+                                                            ,file_types)))
+    return tree    
 
-data= '/User/someuser/file.py;/tmp/download/file.zip;/tmp/download/file2.zip;/;/usr/local/bin;/User/someuser/file..py;/tmp/file.;/usr//some'
-print(data_preprocessing_tree(data))
 #------------------------------------------------------------------------------ 
 # Question -3-
 
@@ -167,6 +198,7 @@ def make_currency(amount = 0.0, symbol = ''):
         symbol = new_sign
     
     # Dispatch function.
+    
     return dispatch
 
 #------------------------------------------------------------------------------ 
@@ -322,23 +354,3 @@ def print_rlist(s):
         return '{0},{1}'.format(first(s), print_rlist(rest(s)))
     
     return '{0}]'.format(first(s))
-
-
-
-# TODO: don't forget to remove operating lines!
-# my_list = make_mutable_rlist()
-# for x in range(4):
-#     my_list['push_first'](x)
-# my_list['str']()
-# 
-# ext = make_mutable_rlist(my_list)
-# my_list['extend'](ext)
-# my_list['str']()
-# ext['str']()
-# 
-# it = my_list['get_iterator']()
-# while it['hasNext']():
-#     print(it['next']())
-# my_list['slice'](0,2)['str']()
-# your_list = make_mutable_rlist(my_list)
-# your_list['str']()
